@@ -27,6 +27,7 @@ public class DHCPPacket {
     private byte [] chaddr;     // 16 byte -> first 6 byte = client MAC Address;
     private byte [] sname;      // 44 byte (0)
     private byte [] file;       // 128 byte (0)
+    private byte [] magicCookie= new byte[]{99,(byte)130,83,99};
     private byte [] options;    // 64x byte
     ////////////////////////////////////////////////////////
     //////////////////////// methods ///////////////////////
@@ -40,6 +41,7 @@ public class DHCPPacket {
         xid = Utility.readNByte(4, message.getData(), 4);
         secs = Utility.readNByte(2, message.getData(), 8);
         flags = Utility.readNByte(2, message.getData(), 10);
+        flags[0]=1;
         ciaddr = new byte[4];
         yiaddr = new byte[]{(byte)192,(byte)168,1,4};
         siaddr = Utility.getIPAddress();
