@@ -13,22 +13,22 @@ import java.net.InetAddress;
  * @author sina
  */
 public class DHCPPacket {
-    private byte op ;           // for server = 2 , for client = 1
-    private byte htype;         // hardware kind ,for example 10 Mb Ethernet
-    private byte hlen;          // length of device address which is connected , usually 6 (byte) for MAC
-    private byte hops;          // 0 in end systems , inc for each router
-    private byte [] xid;        // 4 byte message id (repeat)
-    private byte [] secs;       // 2 byte (0)
-    private byte [] flags;      // 2 byte (bit flag = 0)
-    private byte [] ciaddr;     // 4 byte (0)
-    private byte [] yiaddr;     // 4 byte (client ip address)
-    private byte [] siaddr;     // 4 byte (server ip address)
-    private byte [] giaddr;     // 4 byte (0)
-    private byte [] chaddr;     // 16 byte -> first 6 byte = client MAC Address;
-    private byte [] sname;      // 44 byte (0)
-    private byte [] file;       // 128 byte (0)
-    private byte [] magicCookie= new byte[]{99,(byte)130,83,99};
-    private byte [] options;    // 64x byte
+    public byte op ;           // for server = 2 , for client = 1
+    public byte htype;         // hardware kind ,for example 10 Mb Ethernet
+    public byte hlen;          // length of device address which is connected , usually 6 (byte) for MAC
+    public byte hops;          // 0 in end systems , inc for each router
+    public byte [] xid;        // 4 byte message id (repeat)
+    public byte [] secs;       // 2 byte (0)
+    public byte [] flags;      // 2 byte (bit flag = 0)
+    public byte [] ciaddr;     // 4 byte (0)
+    public byte [] yiaddr;     // 4 byte (client ip address)
+    public byte [] siaddr;     // 4 byte (server ip address)
+    public byte [] giaddr;     // 4 byte (0)
+    public byte [] chaddr;     // 16 byte -> first 6 byte = client MAC Address;
+    public byte [] sname;      // 44 byte (0)
+    public byte [] file;       // 128 byte (0)
+    public byte [] magicCookie= new byte[]{99,(byte)130,83,99};
+    public byte [] options;    // 64x byte
     ////////////////////////////////////////////////////////
     //////////////////////// methods ///////////////////////
     ////////////////////////////////////////////////////////
