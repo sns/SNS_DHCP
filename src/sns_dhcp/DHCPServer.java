@@ -7,6 +7,7 @@ package sns_dhcp;
 
 import com.sun.swing.internal.plaf.basic.resources.basic;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -19,46 +20,51 @@ import java.util.Random;
 public class DHCPServer {
 
     private DatagramPacket socket;
-    private HashMap<byte[],Object> db;
-    private HashMap<byte[], Object> reserved;
+    private HashMap<byte[],IPTime> db;
+    private HashMap<byte[], IPTime> reserved;
     private Random randomIp;
-
-    public DHCPServer(IPAddress subnetmask, IPAddress gateway, IPAddress DNS, Timestamp renewal, Timestamp rebinding, Timestamp lease) {
+    private int MaxLength = 2048;
+    public DHCPServer(IPAddress subnetmask, IPAddress gateway, IPAddress DNS, int renewal, int rebinding, int lease) {
         byte[] validData;
         DatagramPacket recivedPacket;
         DHCPPacket temp = null;
         {
-            byte[] recievedData = new byte[2000];
-            recivedPacket = new DatagramPacket(recievedData, 2000);
+            byte[] recievedData = new byte[MaxLength];
+            recivedPacket = new DatagramPacket(recievedData, MaxLength);
             validData = Utility.readNByte(recivedPacket.getLength(), recievedData, 0);
             recivedPacket.setData(validData);
         }
         temp = new DHCPPacket(recivedPacket);
+        Option gatewayOption = new Option((byte) 3, (byte) 4, gateway.IPAddressToByte());
+        temp.getOptions().add(gatewayOption);
+        Option DNSOption = new Option((byte) 6, (byte) 4, DNS.IPAddressToByte());
+        temp.getOptions().add(DNSOption);
+        Option subnetmaskOption = new Option((byte) 1, (byte) 4, subnetmask.IPAddressToByte());
+        temp.getOptions().add(subnetmaskOption);
+        Option serverIPOption = new Option((byte) 54, (byte) 4, Utility.getIPAddress());
+        temp.getOptions().add(serverIPOption);
+        Option renewalTimeOption = new Option((byte) 58, (byte) 4, Utility.intToByteArray(renewal));
+        temp.getOptions().add(renewalTimeOption);
+        Option rebindingTimeOption = new Option((byte) 59, (byte) 4, Utility.intToByteArray(rebinding));
+        temp.getOptions().add(rebindingTimeOption);
+        Option leaseTimeOption = new Option((byte) 51, (byte) 4, Utility.intToByteArray(lease));
+        temp.getOptions().add(leaseTimeOption);
         //option 240 start
-        int optionSize = recivedPacket.getLength()-240;
+        int optionSize = recivedPacket.getLength() - 240;
         byte[] option = new byte[optionSize];
         option = Utility.readNByte(optionSize, validData, 240);
-        byte[] MessageOption = new byte[6];
-        Utility.optionTraverse(option, 53, MessageOption);
-        if (MessageOption[1] == 1) // we recieved Discover message , we must create an offer message
+        byte[] messageOption = new byte[6];
+        byte[] option50 = new byte[6];
+        Utility.optionTraverse(option, 53, messageOption);
+        Utility.optionTraverse(option, 50, option50);
+        if (messageOption[2] == 1) // we recieved Discover message , we must create an offer message
         {
-            DHCPPacket offer = temp;  // optopn 53 must have the value of 2
-            //ip = first.second.third.forth
-            byte first = (byte) randomIp.nextInt((256 - subnetmask.getFirst()) + subnetmask.getFirst());
-            byte second = (byte) randomIp.nextInt((256 - subnetmask.getSecond()) + subnetmask.getSecond());
-            byte third = (byte) randomIp.nextInt((256 - subnetmask.getThird()) + subnetmask.getThird());
-            byte forth = (byte) randomIp.nextInt((256 - subnetmask.getForth()) + subnetmask.getForth());
-            IPAddress offeredIP = new IPAddress(first, second, third, forth);
-            byte[] mac = Utility.readNByte(6, temp.getChaddr(), 0);
-            // get current timestamp
-            Calendar today = Calendar.getInstance();
-            Timestamp now = new Timestamp(today.getTimeInMillis());
-            //creat IPTime object and put into reserve HashMap
-            IPTime reservedIPTime = new IPTime(offeredIP, now.getTime());
-            reserved.put(mac, reservedIPTime);
-            //set client offer ip
-            temp.setYiaddr(offeredIP.IPAddressToByte());
+          DHCPPacket offer = Utility.getDiscover(temp, reserved, randomIp, subnetmask);
+        } else if (messageOption[2] == 3) // DHCP Request
+        {
+          DHCPPacket AckOrDecline = Utility.getRequest(temp, reserved, db, option50);
         }
 
     }
+   
 }

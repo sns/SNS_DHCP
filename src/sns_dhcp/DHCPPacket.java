@@ -7,6 +7,7 @@ package sns_dhcp;
 
 import java.net.DatagramPacket;
 import java.net.InetAddress;
+import java.util.Vector;
 
 /**
  *
@@ -28,7 +29,8 @@ public class DHCPPacket {
     private byte [] sname;      // 44 byte (0)
     private byte [] file;       // 128 byte (0)
     private byte [] magicCookie= new byte[]{99,(byte)130,83,99};
-    private byte [] options;    // 64x byte
+    //private byte [] options;    // 64x byte
+    private Vector<Option> options;
     ////////////////////////////////////////////////////////
     //////////////////////// methods ///////////////////////
     ////////////////////////////////////////////////////////
@@ -50,7 +52,8 @@ public class DHCPPacket {
         chaddr = Utility.readNByte(16,message.getData(),28);
         sname = new byte[64];
         file = new byte[128];
-        options = new byte [64];
+        //options = new byte [64];
+        options = new Vector<Option>();
 
     }
 
@@ -253,20 +256,24 @@ public class DHCPPacket {
     /**
      * @return the options
      */
-    public byte[] getOptions() {
+    public Vector<Option> getOptions() {
         return options;
     }
 
     /**
      * @param options the options to set
      */
-    public void setOptions(byte[] options) {
+    public void setOptions(Vector<Option> options) {
         this.options = options;
     }
 
     /**
-     * @param xid the xid to set
+     * @return the magicCookie
      */
-  
+    public byte[] getMagicCookie() {
+        return magicCookie;
+    }
+
+   
    
 }
