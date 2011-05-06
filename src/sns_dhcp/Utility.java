@@ -169,9 +169,7 @@ public class Utility {
         byte forth = (byte) randomIP.nextInt((256 - subnetmask.getForth()) + subnetmask.getForth());
         IPAddress offeredIP = new IPAddress(first, second, third, forth);
         byte[] mac = Utility.readNByte(6, offer.getChaddr(), 0);
-        // get current timestamp
-        Calendar today = Calendar.getInstance();
-        Timestamp now = new Timestamp(today.getTimeInMillis());
+        Timestamp now = Utility.getCurrentTimeStamp();
         //creat IPTime object and put into reserve HashMap
         IPTime reservedIPTime = new IPTime(offeredIP, now.getTime());
         reserved.put(mac, reservedIPTime);
@@ -187,9 +185,7 @@ public class Utility {
         IPAddress offeredIP = reserved.get(mac).getIp();
         if(offeredIP == requestedIP)
         {
-            // get current timestamp
-            Calendar today = Calendar.getInstance();
-            Timestamp now = new Timestamp(today.getTimeInMillis());
+            Timestamp now = Utility.getCurrentTimeStamp();
             //creat IPTime and insert into db
             IPTime confirmed = new IPTime(offeredIP, now);
             db.put(mac, confirmed);
@@ -225,5 +221,21 @@ public class Utility {
             } catch (IOException ex) {
                 Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
             }
+    }
+
+    public static boolean hasMagicCookie(byte[] data)
+    {
+        boolean hasIt = false;
+        byte[] magic = readNByte(4, data, 236);
+        if(magic [0] == 99 && magic[1] == (byte)130 && magic[2] == 83 && magic[3] == 99)
+            hasIt = true;
+        return hasIt;
+    }
+    public static Timestamp getCurrentTimeStamp()
+    {
+            // get current timestamp
+        Calendar today = Calendar.getInstance();
+        Timestamp now = new Timestamp(today.getTimeInMillis());
+        return now;
     }
 }
