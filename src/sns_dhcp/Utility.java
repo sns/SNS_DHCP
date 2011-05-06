@@ -46,4 +46,22 @@ public class Utility {
         }
         return null;
     }
+    public static boolean  optionTraverse(byte[] option, int optionID , byte[] result)
+    {
+        boolean found = false;
+        int i = 0;
+        while ( i < option.length )
+        {
+            if (option[i] == optionID)
+            {
+                result = readNByte(6, option, i);
+                found = true;
+                break;
+            }
+            else 
+                i += option[i+1];
+        }
+        return found;
+    }
+
 }

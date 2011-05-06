@@ -43,7 +43,8 @@ public class DHCPPacket {
         flags = Utility.readNByte(2, message.getData(), 10);
         flags[0]=1;
         ciaddr = new byte[4];
-        yiaddr = new byte[]{(byte)192,(byte)168,1,4};
+        //yiaddr = new byte[]{(byte)192,(byte)168,1,4};
+        yiaddr = new byte[4];
         siaddr = Utility.getIPAddress();
         giaddr = new byte[4];
         chaddr = Utility.readNByte(16,message.getData(),28);
