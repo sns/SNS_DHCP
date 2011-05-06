@@ -6,12 +6,18 @@
 package sns_dhcp;
 
 import com.sun.swing.internal.plaf.basic.resources.basic;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,18 +25,29 @@ import java.util.Random;
  */
 public class DHCPServer {
 
-    private DatagramPacket socket;
+    private DatagramSocket socket;
     private HashMap<byte[],IPTime> db;
     private HashMap<byte[], IPTime> reserved;
     private Random randomIp;
     private int MaxLength = 2048;
-    public DHCPServer(IPAddress subnetmask, IPAddress gateway, IPAddress DNS, int renewal, int rebinding, int lease) {
+
+    public DHCPServer(IPAddress subnetmask, IPAddress gateway, IPAddress DNS, int renewal, int rebinding, int lease){
         byte[] validData;
         DatagramPacket recivedPacket;
+        try {
+            socket = new DatagramSocket(67);
+        } catch (SocketException ex) {
+            Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
         DHCPPacket temp = null;
         {
             byte[] recievedData = new byte[MaxLength];
             recivedPacket = new DatagramPacket(recievedData, MaxLength);
+            try {
+                socket.receive(recivedPacket);
+            } catch (IOException ex) {
+                Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
             validData = Utility.readNByte(recivedPacket.getLength(), recievedData, 0);
             recivedPacket.setData(validData);
         }
@@ -59,12 +76,23 @@ public class DHCPServer {
         Utility.optionTraverse(option, 50, option50);
         if (messageOption[2] == 1) // we recieved Discover message , we must create an offer message
         {
-          DHCPPacket offer = Utility.getDiscover(temp, reserved, randomIp, subnetmask);
+            DHCPPacket offer = Utility.getDiscover(temp, reserved, randomIp, subnetmask);
+            Utility.sendReply(offer, socket);
         } else if (messageOption[2] == 3) // DHCP Request
         {
-          DHCPPacket AckOrDecline = Utility.getRequest(temp, reserved, db, option50);
+            DHCPPacket AckOrDecline = Utility.getRequest(temp, reserved, db, option50);
+            Utility.sendReply(AckOrDecline, socket);
         }
 
+
+
+
     }
-   
+    public void start ()
+    {
+//        while(true)
+//        {
+//
+//        }
+    }
 }

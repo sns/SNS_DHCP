@@ -7,15 +7,20 @@ package sns_dhcp;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -197,5 +202,28 @@ public class Utility {
             AckOrDecline.getOptions().add(DeclineOption);
         }
         return AckOrDecline;
+    }
+
+    public static void sendReply(DHCPPacket toBeSend, DatagramSocket socket)
+    {
+        int replySize = Utility.DHCPPacketToByte(toBeSend).length;
+            byte[] reply = Utility.DHCPPacketToByte(toBeSend);
+            DatagramPacket replyPacket = new DatagramPacket(reply, replySize);
+            try {
+                socket = new DatagramSocket();
+                replyPacket.setPort(68);
+                replyPacket.setAddress(InetAddress.getByAddress(new byte[]{(byte) 255, (byte) 255, (byte) 255, (byte) 255}));
+                socket.setBroadcast(true);
+
+                socket.send(replyPacket);
+
+
+            } catch (SocketException ex) {
+                Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnknownHostException ex) {
+                Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
 }
