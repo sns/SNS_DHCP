@@ -72,6 +72,8 @@ public class DHCPServer {
     }
 
     public void start() {
+        leaseCheckerThread leaseChecker = new leaseCheckerThread();
+        leaseChecker.run();
         while (true) {
             byte[] validData;
             DatagramPacket recivedPacket;
@@ -139,17 +141,17 @@ public class DHCPServer {
             while (true) {
                 try {
                     leaseCheckerThread.sleep(900000);
-                        Iterator itr = db.entrySet().iterator();
-                        while (itr.hasNext()) {
-                            Map.Entry pairs = (Map.Entry) itr.next();
-                            tempValue = (IPTime) pairs.getValue();
-                            Timestamp leaseTime = new Timestamp(lease * 1000);
-                            if (Utility.getCurrentTimeStamp().getTime() - tempValue.getTime().getTime() >= leaseTime.getTime()) {
-                                db.remove(pairs.getKey());
-                            }
+                    Iterator itr = db.entrySet().iterator();
+                    while (itr.hasNext()) {
+                        Map.Entry pairs = (Map.Entry) itr.next();
+                        tempValue = (IPTime) pairs.getValue();
+                        Timestamp leaseTime = new Timestamp(lease * 1000);
+                        if (Utility.getCurrentTimeStamp().getTime() - tempValue.getTime().getTime() >= leaseTime.getTime()) {
+                            db.remove(pairs.getKey());
                         }
+                    }
 
-                }catch (InterruptedException ex) {
+                } catch (InterruptedException ex) {
                     Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

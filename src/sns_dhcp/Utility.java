@@ -238,4 +238,23 @@ public class Utility {
         Timestamp now = new Timestamp(today.getTimeInMillis());
         return now;
     }
+    //////////////////////////////////////////////////////////
+    /////////////////////////General//////////////////////////
+    //////////////////////////////////////////////////////////
+    public static IPAddress dottedStringToIP(String input)
+    {
+
+        IPAddress ip = new IPAddress((byte)0,(byte)0,(byte)0,(byte)0);
+        String[] temp = input.split("\\.");
+        int first = Integer.parseInt(temp[0]);
+        int second = Integer.parseInt(temp[1]);
+        int third = Integer.parseInt(temp[2]);
+        int forth = Integer.parseInt(temp[3]);
+        ip.setFirst((byte)first);
+        ip.setSecond((byte)second);
+        ip.setThird((byte)third);
+        ip.setForth((byte)forth);
+        return ip;
+    }
+
 }
