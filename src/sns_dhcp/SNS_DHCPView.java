@@ -101,13 +101,11 @@ public class SNS_DHCPView extends FrameView {
     private void initComponents() {
 
         mainPanel = new javax.swing.JPanel();
-        IP = new javax.swing.JTextField();
         gateway = new javax.swing.JTextField();
         DNS = new javax.swing.JTextField();
         renewal = new javax.swing.JTextField();
         subnetmask = new javax.swing.JTextField();
         rebinding = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
@@ -130,9 +128,6 @@ public class SNS_DHCPView extends FrameView {
         mainPanel.setName("mainPanel"); // NOI18N
 
         org.jdesktop.application.ResourceMap resourceMap = org.jdesktop.application.Application.getInstance(sns_dhcp.SNS_DHCPApp.class).getContext().getResourceMap(SNS_DHCPView.class);
-        IP.setText(resourceMap.getString("IP.text")); // NOI18N
-        IP.setName("IP"); // NOI18N
-
         gateway.setText(resourceMap.getString("gateway.text")); // NOI18N
         gateway.setName("gateway"); // NOI18N
 
@@ -147,9 +142,6 @@ public class SNS_DHCPView extends FrameView {
 
         rebinding.setText(resourceMap.getString("rebinding.text")); // NOI18N
         rebinding.setName("rebinding"); // NOI18N
-
-        jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
-        jLabel1.setName("jLabel1"); // NOI18N
 
         jLabel2.setText(resourceMap.getString("jLabel2.text")); // NOI18N
         jLabel2.setName("jLabel2"); // NOI18N
@@ -191,36 +183,32 @@ public class SNS_DHCPView extends FrameView {
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel2)
-                                .addComponent(jLabel1)
                                 .addComponent(jLabel3))
                             .addComponent(jLabel4))
                         .addComponent(jLabel5))
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(IP, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(gateway, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(DNS, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(subnetmask, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(renewal, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(rebinding, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))
-                .addGap(29, 29, 29)
-                .addComponent(jLabel7)
+                    .addComponent(jLabel6)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lease, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(start, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                    .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(gateway, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(DNS, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(subnetmask, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(renewal, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(rebinding, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)))
+                .addGap(82, 82, 82)
+                .addComponent(start, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(125, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(IP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7)
                     .addComponent(lease, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -326,9 +314,7 @@ public class SNS_DHCPView extends FrameView {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField DNS;
-    private javax.swing.JTextField IP;
     private javax.swing.JTextField gateway;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

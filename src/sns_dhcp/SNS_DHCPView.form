@@ -17,7 +17,6 @@
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" groupAlignment="1" attributes="0">
                                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                                  <Component id="jLabel1" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -25,24 +24,22 @@
                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                      <Component id="IP" alignment="0" max="32767" attributes="1"/>
-                      <Component id="gateway" alignment="0" max="32767" attributes="1"/>
-                      <Component id="DNS" alignment="0" max="32767" attributes="1"/>
-                      <Component id="subnetmask" alignment="0" max="32767" attributes="1"/>
-                      <Component id="renewal" alignment="0" max="32767" attributes="1"/>
-                      <Component id="rebinding" alignment="0" pref="196" max="32767" attributes="1"/>
-                  </Group>
-                  <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
-                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="lease" min="-2" pref="190" max="-2" attributes="0"/>
-                      <Component id="start" min="-2" pref="89" max="-2" attributes="0"/>
+                      <Component id="lease" alignment="0" min="-2" pref="190" max="-2" attributes="0"/>
+                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="gateway" alignment="0" max="32767" attributes="1"/>
+                          <Component id="DNS" alignment="0" max="32767" attributes="1"/>
+                          <Component id="subnetmask" alignment="0" max="32767" attributes="1"/>
+                          <Component id="renewal" alignment="0" max="32767" attributes="1"/>
+                          <Component id="rebinding" alignment="0" pref="196" max="32767" attributes="1"/>
+                      </Group>
                   </Group>
-                  <EmptySpace pref="24" max="32767" attributes="0"/>
+                  <EmptySpace min="-2" pref="82" max="-2" attributes="0"/>
+                  <Component id="start" min="-2" pref="89" max="-2" attributes="0"/>
+                  <EmptySpace pref="125" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -50,12 +47,11 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="IP" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lease" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                      <Component id="lease" alignment="1" min="-2" max="-2" attributes="0"/>
                   </Group>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
@@ -95,12 +91,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JTextField" name="IP">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="IP.text"/>
-            <Property name="name" type="java.lang.String" value="IP" noResource="true"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JTextField" name="gateway">
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="gateway.text"/>
@@ -129,12 +119,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" resourceKey="rebinding.text"/>
             <Property name="name" type="java.lang.String" value="rebinding" noResource="true"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JLabel" name="jLabel1">
-          <Properties>
-            <Property name="text" type="java.lang.String" resourceKey="jLabel1.text"/>
-            <Property name="name" type="java.lang.String" value="jLabel1" noResource="true"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel2">
