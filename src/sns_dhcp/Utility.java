@@ -37,6 +37,12 @@ public class Utility {
         }
         return result;
     }
+//    public static byte[] readNByte(int n, byte[] in, int start, byte[] out, boolean newarray) {
+//        for (int i = 0; i < n; i++) {
+//            out[i] = in[start + i];
+//        }
+//        return out;
+//    }
 
     public static byte[] intToByteArray(int value) {
         byte[] b = new byte[4];
@@ -117,11 +123,12 @@ public class Utility {
         int i = 0;
         while (i < option.length) {
             if (option[i] == optionID) {
-                result = readNByte(6, option, i);
+                //result = readNByte(result.length, option, i);
+                Utility.copyByte(result, option, 0, i, result.length);
                 found = true;
                 break;
             } else {
-                i += option[i + 1];
+                i += option[i + 1] + 2 ;
             }
         }
         return found;
@@ -198,7 +205,7 @@ public class Utility {
         byte[] mac = Utility.readNByte(6, offer.getChaddr(), 0);
         Timestamp now = Utility.getCurrentTimeStamp();
         //creat IPTime object and put into reserve HashMap
-        IPTime reservedIPTime = new IPTime(offeredIP, now.getTime());
+        IPTime reservedIPTime = new IPTime(offeredIP, now);
         reserved.put(mac, reservedIPTime);
         //set client offer ip
         offer.setYiaddr(offeredIP.IPAddressToByte());

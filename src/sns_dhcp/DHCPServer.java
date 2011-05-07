@@ -39,7 +39,7 @@ public class DHCPServer {
     int renewal;
     int rebinding;
     int lease;
-    private Random randomIp;
+    private Random randomIp = new Random();
     private int MaxLength = 2048;
 
     public DHCPServer() {
@@ -72,8 +72,8 @@ public class DHCPServer {
     }
 
     public void start() {
-        leaseCheckerThread leaseChecker = new leaseCheckerThread();
-        leaseChecker.run();
+//        leaseCheckerThread leaseChecker = new leaseCheckerThread();
+//        leaseChecker.run();
         while (true) {
             byte[] validData;
             DatagramPacket recivedPacket;
@@ -88,6 +88,7 @@ public class DHCPServer {
                 recivedPacket = new DatagramPacket(recievedData, MaxLength);
                 try {
                     socket.receive(recivedPacket);
+                    socket.close();
                 } catch (IOException ex) {
                     Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -113,7 +114,7 @@ public class DHCPServer {
             int optionSize = recivedPacket.getLength() - 240;
             byte[] option = new byte[optionSize];
             option = Utility.readNByte(optionSize, validData, 240);
-            byte[] messageOption = new byte[6];
+            byte[] messageOption = new byte[3];
             byte[] option50 = new byte[6];
             Utility.optionTraverse(option, 53, messageOption);
             Utility.optionTraverse(option, 50, option50);
@@ -131,30 +132,30 @@ public class DHCPServer {
 
     }
 
-    class leaseCheckerThread extends Thread {
-
-        IPTime tempValue;
-        byte[] tempKey;
-
-        public void run() {
-
-            while (true) {
-                try {
-                    leaseCheckerThread.sleep(900000);
-                    Iterator itr = db.entrySet().iterator();
-                    while (itr.hasNext()) {
-                        Map.Entry pairs = (Map.Entry) itr.next();
-                        tempValue = (IPTime) pairs.getValue();
-                        Timestamp leaseTime = new Timestamp(lease * 1000);
-                        if (Utility.getCurrentTimeStamp().getTime() - tempValue.getTime().getTime() >= leaseTime.getTime()) {
-                            db.remove(pairs.getKey());
-                        }
-                    }
-
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
-    }
+//    class leaseCheckerThread extends Thread {
+//
+//        IPTime tempValue;
+//        byte[] tempKey;
+//
+//        public void run() {
+//
+//            while (true) {
+//                try {
+//                    leaseCheckerThread.sleep(900000);
+//                    Iterator itr = db.entrySet().iterator();
+//                    while (itr.hasNext()) {
+//                        Map.Entry pairs = (Map.Entry) itr.next();
+//                        tempValue = (IPTime) pairs.getValue();
+//                        Timestamp leaseTime = new Timestamp(lease * 1000);
+//                        if (Utility.getCurrentTimeStamp().getTime() - tempValue.getTime().getTime() >= leaseTime.getTime()) {
+//                            db.remove(pairs.getKey());
+//                        }
+//                    }
+//
+//                } catch (InterruptedException ex) {
+//                    Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//        }
+//    }
 }
