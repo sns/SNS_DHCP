@@ -30,8 +30,8 @@ import sun.security.jca.GetInstance;
 public class DHCPServer {
 
     private DatagramSocket socket;
-    private HashMap<byte[], IPTime> db;
-    private HashMap<byte[], IPTime> reserved;
+    private HashMap<ByteArray, IPTime> db;
+    private HashMap<ByteArray, IPTime> reserved;
     IPAddress dhcpServerIP;
     IPAddress DNS;
     IPAddress gateway;
@@ -48,8 +48,8 @@ public class DHCPServer {
         } catch (SocketException ex) {
             Logger.getLogger(DHCPServer.class.getName()).log(Level.SEVERE, null, ex);
         }
-        db = new HashMap<byte[], IPTime>(255);
-        reserved = new HashMap<byte[], IPTime>(255);
+        db = new HashMap<ByteArray, IPTime>(255);
+        reserved = new HashMap<ByteArray, IPTime>(255);
         dhcpServerIP = new IPAddress(Utility.getIPAddress());
         gateway = dhcpServerIP;
         DNS = dhcpServerIP;
@@ -60,8 +60,8 @@ public class DHCPServer {
     }
 
     public DHCPServer(IPAddress subnetmask, IPAddress gateway, IPAddress DNS, int renewal, int rebinding, int lease) {
-        db = new HashMap<byte[], IPTime>(1024);
-        reserved = new HashMap<byte[], IPTime>(1024);
+        db = new HashMap<ByteArray, IPTime>(1024);
+        reserved = new HashMap<ByteArray, IPTime>(1024);
         dhcpServerIP = new IPAddress(Utility.getIPAddress());
         this.gateway = gateway;
         this.DNS = DNS;
@@ -118,11 +118,11 @@ public class DHCPServer {
             byte[] option50 = new byte[6];
             Utility.optionTraverse(option, 53, messageOption);
             Utility.optionTraverse(option, 50, option50);
-            if (messageOption[2] == 1) // we recieved Discover message , we must create an offer message
+            if (messageOption[2] == (byte) 1) // we recieved Discover message , we must create an offer message
             {
                 DHCPPacket offer = Utility.getDiscover(temp, db, reserved, randomIp, subnetmask);
                 Utility.sendReply(offer, socket);
-            } else if (messageOption[2] == 3) // DHCP Request
+            } else if (messageOption[2] == (byte) 3) // DHCP Request
             {
                 DHCPPacket AckOrDecline = Utility.getRequest(temp, reserved, db, option50);
                 Utility.sendReply(AckOrDecline, socket);
