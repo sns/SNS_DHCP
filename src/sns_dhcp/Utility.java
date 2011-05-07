@@ -123,7 +123,7 @@ public class Utility {
         boolean found = false;
         int i = 0;
         while (i < option.length) {
-            if ((byte) option[i] == (byte)optionID) {
+            if ((byte) option[i] == (byte) optionID) {
                 //result = readNByte(result.length, option, i);
                 Utility.copyByte(result, option, 0, i, result.length);
                 found = true;
@@ -167,10 +167,14 @@ public class Utility {
 
     public static IPAddress RandomIPGenerator(IPAddress subnetmask, Random randomIP) {
         //ip = first.second.third.forth
-        byte first = (byte) randomIP.nextInt((256 - subnetmask.getFirst()) + subnetmask.getFirst());
-        byte second = (byte) randomIP.nextInt((256 - subnetmask.getSecond()) + subnetmask.getSecond());
-        byte third = (byte) randomIP.nextInt((256 - subnetmask.getThird()) + subnetmask.getThird());
-        byte forth = (byte) randomIP.nextInt((256 - subnetmask.getForth()) + subnetmask.getForth());
+//        byte first = (byte) (randomIP.nextInt(256 - subnetmask.getFirst()) + subnetmask.getFirst());
+//        byte second = (byte) (randomIP.nextInt(256 - subnetmask.getSecond()) + subnetmask.getSecond());
+//        byte third = (byte) (randomIP.nextInt(256 - subnetmask.getThird()) + subnetmask.getSecond());
+//        byte forth = (byte) (randomIP.nextInt(256 - subnetmask.getForth()) + subnetmask.getSecond());
+        byte first = (byte) 192;
+        byte second = (byte) 168;
+        byte third = (byte) 1;
+        byte forth = (byte) randomIP.nextInt(255);
         IPAddress offeredIP = new IPAddress(first, second, third, forth);
         return offeredIP;
     }
@@ -211,22 +215,29 @@ public class Utility {
     }
 
     public static DHCPPacket getRequest(DHCPPacket request, HashMap<ByteArray, IPTime> reserved, HashMap<ByteArray, IPTime> db, byte[] Option50) {
-        DHCPPacket AckOrDecline = request;
+        DHCPPacket AckOrNack = request;
         ByteArray mac = new ByteArray(Utility.readNByte(6, request.getChaddr(), 0));
         IPAddress requestedIP = new IPAddress(readNByte(4, Option50, 2));
-        IPAddress offeredIP = reserved.get(mac).getIp();
-        if (Utility.areEqual(offeredIP.IPAddressToByte(), requestedIP.IPAddressToByte())) {
-            Timestamp now = Utility.getCurrentTimeStamp();
-            //creat IPTime and insert into db
-            IPTime confirmed = new IPTime(offeredIP, now);
-            db.put(mac, confirmed);
-            Option AckOption = new Option((byte) 53, (byte) 5);
-            AckOrDecline.getOptions().add(AckOption);
-        } else if (!Utility.areEqual(offeredIP.IPAddressToByte(), requestedIP.IPAddressToByte())) {
-            Option DeclineOption = new Option((byte) 53, (byte) 4);
-            AckOrDecline.getOptions().add(DeclineOption);
+        if (!reserved.containsKey(mac)) {
+            Option NackOption = new Option((byte) 53, (byte) 6);
+            AckOrNack.getOptions().add(NackOption);
+            return AckOrNack;
+        } else {
+            IPAddress offeredIP = reserved.get(mac).getIp();
+
+            if (Utility.areEqual(offeredIP.IPAddressToByte(), requestedIP.IPAddressToByte())) {
+                Timestamp now = Utility.getCurrentTimeStamp();
+                //creat IPTime and insert into db
+                IPTime confirmed = new IPTime(offeredIP, now);
+                db.put(mac, confirmed);
+                Option AckOption = new Option((byte) 53, (byte) 5);
+                AckOrNack.getOptions().add(AckOption);
+            } else if (!Utility.areEqual(offeredIP.IPAddressToByte(), requestedIP.IPAddressToByte())) {
+                Option NackOption = new Option((byte) 53, (byte) 6);
+                AckOrNack.getOptions().add(NackOption);
+            }
         }
-        return AckOrDecline;
+        return AckOrNack;
     }
 
     public static void sendReply(DHCPPacket toBeSend, DatagramSocket socket) {

@@ -124,8 +124,8 @@ public class DHCPServer {
                 Utility.sendReply(offer, socket);
             } else if (messageOption[2] == (byte) 3) // DHCP Request
             {
-                DHCPPacket AckOrDecline = Utility.getRequest(temp, reserved, db, option50);
-                Utility.sendReply(AckOrDecline, socket);
+                DHCPPacket AckOrNack = Utility.getRequest(temp, reserved, db, option50);
+                Utility.sendReply(AckOrNack, socket);
             }
 
         }
