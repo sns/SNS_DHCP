@@ -17,6 +17,8 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.Vector;
 import java.util.logging.Level;
@@ -156,18 +158,43 @@ public class Utility {
         }
         return size;
     }
-
-    public static DHCPPacket getDiscover(DHCPPacket discover, HashMap<byte[], IPTime> reserved, Random randomIP, IPAddress subnetmask)
+    public static IPAddress RandomIPGenerator(IPAddress subnetmask, Random randomIP)
     {
-        DHCPPacket offer = discover;  // optopn 53 must have the value of 2
-        Option offerOption = new Option((byte) 53, (byte) 2);
-        offer.getOptions().add(offerOption);
         //ip = first.second.third.forth
         byte first = (byte) randomIP.nextInt((256 - subnetmask.getFirst()) + subnetmask.getFirst());
         byte second = (byte) randomIP.nextInt((256 - subnetmask.getSecond()) + subnetmask.getSecond());
         byte third = (byte) randomIP.nextInt((256 - subnetmask.getThird()) + subnetmask.getThird());
         byte forth = (byte) randomIP.nextInt((256 - subnetmask.getForth()) + subnetmask.getForth());
         IPAddress offeredIP = new IPAddress(first, second, third, forth);
+        return offeredIP;
+    }
+    public static boolean HasIPAdress(IPAddress ip, HashMap<byte[],IPTime> db)
+    {
+        boolean contains = false;
+        Iterator iter = db.entrySet().iterator();
+        IPTime tempValue;
+        while(iter.hasNext())
+        {
+            Map.Entry pairs = (Map.Entry) iter.next();
+            tempValue = (IPTime) pairs.getValue();
+            if(tempValue.getIp() == ip)
+               contains = true;
+
+        }
+        return  contains;
+    }
+
+    public static DHCPPacket getDiscover(DHCPPacket discover, HashMap<byte[], IPTime> db ,HashMap<byte[], IPTime> reserved, Random randomIP, IPAddress subnetmask)
+    {
+        DHCPPacket offer = discover;  // optopn 53 must have the value of 2
+        Option offerOption = new Option((byte) 53, (byte) 2);
+        offer.getOptions().add(offerOption);
+        IPAddress offeredIP;
+
+        do{
+            offeredIP = Utility.RandomIPGenerator(subnetmask, randomIP);
+        }while(Utility.HasIPAdress(offeredIP, reserved) || Utility.HasIPAdress(offeredIP, db));
+
         byte[] mac = Utility.readNByte(6, offer.getChaddr(), 0);
         Timestamp now = Utility.getCurrentTimeStamp();
         //creat IPTime object and put into reserve HashMap

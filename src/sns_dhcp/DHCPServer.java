@@ -119,7 +119,7 @@ public class DHCPServer {
             Utility.optionTraverse(option, 50, option50);
             if (messageOption[2] == 1) // we recieved Discover message , we must create an offer message
             {
-                DHCPPacket offer = Utility.getDiscover(temp, reserved, randomIp, subnetmask);
+                DHCPPacket offer = Utility.getDiscover(temp, db, reserved, randomIp, subnetmask);
                 Utility.sendReply(offer, socket);
             } else if (messageOption[2] == 3) // DHCP Request
             {
